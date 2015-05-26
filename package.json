@@ -1,0 +1,37 @@
+{
+  "name": "glob-cp",
+  "version": "1.0.0",
+  "description": "link files and directories with glob patterns and variables.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd test && node test.js"
+  },
+  "keywords": [
+    "glob",
+    "var",
+    "variable",
+    "param",
+    "parameter",
+    "transform",
+    "glob transform",
+    "link",
+    "link files",
+    "link directories",
+    "folders",
+    "link folders",
+    "transform path"
+  ],
+  "author": "Andi Neck",
+  "license": "MIT",
+  "dependencies": {
+    "after": "^0.8.1",
+    "debug": "^2.2.0",
+    "glob-resolve": "^1.0.3",
+    "onetime": "^1.0.0"
+  },
+  "devDependencies": {
+    "object-equal": "^1.0.0",
+    "rimraf": "^2.3.4",
+    "tape": "^4.0.0"
+  }
+}
