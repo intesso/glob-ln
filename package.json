@@ -1,6 +1,6 @@
 {
   "name": "glob-ln",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "link files and directories with glob patterns and variables.",
   "main": "index.js",
   "scripts": {

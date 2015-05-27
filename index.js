@@ -36,7 +36,8 @@ exports.async = function(srcPattern, destPattern, options, cb) {
       var dest = path.resolve(destPaths[i]);
 
       // make sure the dest directory exists
-      var dir = path.dirname(dest);
+      var destPath = (dest.charAt(dest.length - 1) == '/') ? dest.slice(0, -1) : dest;
+      var dir = path.dirname(destPath);
       mkdirp(dir, options, function(err, result) {
         if (err) return next(err);
 
@@ -80,8 +81,10 @@ exports.sync = function(srcPattern, destPattern, options) {
     src = path.resolve(src);
     var dest = path.resolve(destPaths[i]);
 
+
     // make sure the dest directory exists
-    var dir = path.dirname(dest);
+    var destPath = (dest.charAt(dest.length - 1) == '/') ? dest.slice(0, -1) : dest;
+    var dir = path.dirname(destPath);
     mkdirp.sync(dir, options);
 
     // check src type
