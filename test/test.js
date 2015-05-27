@@ -1,56 +1,53 @@
 var test = require('tape');
 var fs = require('fs');
 var equal = require('object-equal');
-var cp = require('../index');
+var ln = require('../index');
 var rm = require('rimraf');
 
-test('do async file', function(t) {
-
-  cleanup();
-
-  var src = __dirname + '/fixtures/:module/public/js/*.*';
-  var dest = __dirname + '/public/:module/js/*.*';
-
-  cp(src, dest, function(err) {
-
-    t.ok(!err);
-    t.ok(exists(__dirname + '/public/test_pub/js/bundle.js'));
-    t.ok(exists(__dirname + '/public/Irish-Pub/js/bundle.js'));
-
-    t.end(err);
-  });
-
-});
-
-test('do sync file', function(t) {
-
-  cleanup();
-
-  var src = __dirname + '/fixtures/:module/public/js/*.*';
-  var dest = __dirname + '/public/:module/js/*.*';
-
-  var result = cp.sync(src, dest);
-
-    t.ok(!result);
-    t.ok(exists(__dirname + '/public/test_pub/js/bundle.js'));
-    t.ok(exists(__dirname + '/public/Irish-Pub/js/bundle.js'));
-
-    t.end(result);
-
-});
-
-test('do async dir recursive', function(t) {
+test('do async directory', function(t) {
 
   cleanup();
 
   var src = __dirname + '/fixtures/:module/public';
   var dest = __dirname + '/public/:module';
 
-  cp(src, dest, {recursive: true}, function(err) {
+  ln(src, dest, function(err) {
 
     t.ok(!err);
-    t.ok(exists(__dirname + '/public/test_pub/js'));
-    t.ok(exists(__dirname + '/public/Irish-Pub/css'));
+    t.ok(exists(__dirname + '/public/test_pub'));
+    t.ok(exists(__dirname + '/public/Irish-Pub'));
+
+    t.end(err);
+  });
+
+});
+
+test('do sync directory', function(t) {
+
+  cleanup();
+
+  var src = __dirname + '/fixtures/:module/public';
+  var dest = __dirname + '/public/:module';
+
+  ln.sync(src, dest);
+
+  t.ok(exists(__dirname + '/public/test_pub'));
+  t.ok(exists(__dirname + '/public/Irish-Pub'));
+
+  t.end();
+
+});
+
+test('do async files', function(t) {
+
+  cleanup();
+
+  var src = __dirname + '/fixtures/:module/public/js/*.*';
+  var dest = __dirname + '/public/:module/js/*.*';
+
+  ln(src, dest, function(err) {
+
+    t.ok(!err);
     t.ok(exists(__dirname + '/public/test_pub/js/bundle.js'));
     t.ok(exists(__dirname + '/public/Irish-Pub/js/bundle.js'));
 
@@ -59,25 +56,21 @@ test('do async dir recursive', function(t) {
 
 });
 
-test('do async dir non recursive', function(t) {
+test('do sync files', function(t) {
 
   cleanup();
 
-  var src = __dirname + '/fixtures/:module/public';
-  var dest = __dirname + '/public/:module';
+  var src = __dirname + '/fixtures/:module/public/js/*.*';
+  var dest = __dirname + '/public/:module/js/*.*';
 
-  // non recursive without dirs
-  cp(src, dest, function(err) {
+  ln.sync(src, dest);
 
-    t.ok(!err);
-    t.ok(exists(__dirname + '/public/test_pub/readme.md'));
-    t.ok(exists(__dirname + '/public/Irish-Pub/readme.md'));
+  t.ok(exists(__dirname + '/public/test_pub/js/bundle.js'));
+  t.ok(exists(__dirname + '/public/Irish-Pub/js/bundle.js'));
 
-    t.end(err);
-  });
+  t.end();
 
 });
-
 
 
 function cleanup() {

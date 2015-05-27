@@ -1,6 +1,6 @@
 {
   "name": "glob-ln",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "link files and directories with glob patterns and variables.",
   "main": "index.js",
   "scripts": {
@@ -27,6 +27,7 @@
     "after": "^0.8.1",
     "debug": "^2.2.0",
     "glob-resolve": "^1.0.3",
+    "mkdirp": "^0.5.1",
     "onetime": "^1.0.0"
   },
   "devDependencies": {

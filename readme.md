@@ -27,7 +27,8 @@ ln(src, dest, function(err) {
 ln.sync('fixtures/:module/public', 'public/:module');
 
 ```
-
+ > use absolute paths on `src` and `dest` to create links.
+ 
  > you can use the whole [glob](https://github.com/isaacs/node-glob) syntax in the `src` and `dest` pattern, as well as the `glob-var` variables starting with a colon `:`
 
 # functions

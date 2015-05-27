@@ -4,10 +4,12 @@
 
 var fs = require('fs');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var resolve = require('glob-resolve');
 var onetime = require('onetime');
 var after = require('after');
 var debug = require('debug')('glob-ln:debug');
+
 
 /*
  * api functions
@@ -25,27 +27,37 @@ exports.async = function(srcPattern, destPattern, options, cb) {
     if (err) return cb(err);
     var srcPaths = result.src.paths;
     var destPaths = result.dest.paths;
-    debug('src', srcPaths, ' / dest', destPaths);
+    debug('\n\rsrc', srcPaths, ' \n\rdest', destPaths);
 
     var next = after(srcPaths.length, cb);
 
     srcPaths.forEach(function(src, i) {
-      var dest = destPaths[i];
+      src = path.resolve(src);
+      var dest = path.resolve(destPaths[i]);
 
-      fs.stat(src, function(err, stat) {
+      // make sure the dest directory exists
+      var dir = path.dirname(dest);
+      mkdirp(dir, options, function(err, result) {
+        if (err) return next(err);
 
-        var isDir = stat.isDirectory();
-        var type = isDir ? 'dir' : 'file';
+        // check src type
+        fs.stat(src, function(err, stat) {
+          if (err) return next(err);
+          var type = stat.isDirectory() ? 'dir' : 'file';
 
-        try {
-          fs.unlink(dest, function(err) {
-            if (err) return next(err);
+          try {
+            // try unlink first
+            fs.unlink(dest, function(err) {
+              // catch err and try to make link
+              fs.symlink(src, dest, type, next);
+            });
+          } catch (err) {
+            // most likely link didn't exist, which is o.k.
+            // so make link anyway
             fs.symlink(src, dest, type, next);
-          });
-        } catch (err) {
-          // most likely link didn't exist, which is o.k.
-          fs.symlink(src, dest, type, next);
-        }
+          }
+
+        });
 
       });
 
@@ -65,13 +77,19 @@ exports.sync = function(srcPattern, destPattern, options) {
   var destPaths = result.dest.paths;
 
   srcPaths.forEach(function(src, i) {
-    var dest = destPaths[i];
+    src = path.resolve(src);
+    var dest = path.resolve(destPaths[i]);
 
+    // make sure the dest directory exists
+    var dir = path.dirname(dest);
+    mkdirp.sync(dir, options);
+
+    // check src type
     var stat = fs.statSync(src);
-    var isDir = stat.isDirectory();
-    var type = isDir ? 'dir' : 'file';
+    var type = stat.isDirectory() ? 'dir' : 'file';
 
     try {
+      // try unlink first
       fs.unlinkSync(dest);
     } catch (err) {
       // most likely link didn't exist, which is o.k.

@@ -1,0 +1,1 @@
+/Users/andineck/Development/github/glob-ln/test/fixtures/Irish-Pub/public/js/bundle.js
