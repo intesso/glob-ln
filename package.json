@@ -1,10 +1,14 @@
 {
   "name": "glob-ln",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "link files and directories with glob patterns and variables.",
   "main": "index.js",
   "scripts": {
     "test": "cd test && node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intesso/glob-ln.git"
   },
   "keywords": [
     "glob",
