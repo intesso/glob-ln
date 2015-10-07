@@ -5,6 +5,7 @@
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var rimraf = require('rimraf');
 var resolve = require('glob-resolve');
 var onetime = require('onetime');
 var after = require('after');
@@ -46,15 +47,20 @@ exports.async = function(srcPattern, destPattern, options, cb) {
           if (err) return next(err);
           var type = stat.isDirectory() ? 'dir' : 'file';
 
-          try {
-            // try unlink first
-            fs.unlink(dest, function(err) {
-              // catch err and try to make link
+          if (!options.force) {
+            try {
+              // try unlink first
+              fs.unlink(dest, function(err) {
+                // catch err and try to make link
+                fs.symlink(src, dest, type, next);
+              });
+            } catch (err) {
+              // most likely link didn't exist, which is o.k.
+              // so make link anyway
               fs.symlink(src, dest, type, next);
-            });
-          } catch (err) {
-            // most likely link didn't exist, which is o.k.
-            // so make link anyway
+            }
+          } else {
+            rimraf.sync(dest);
             fs.symlink(src, dest, type, next);
           }
 
@@ -71,6 +77,8 @@ exports.async = function(srcPattern, destPattern, options, cb) {
 exports = module.exports = exports.async;
 
 exports.sync = function(srcPattern, destPattern, options) {
+  if (!options) options = {};
+
   // extract src vars
   var result = resolve.sync(srcPattern, destPattern, options);
 
@@ -91,12 +99,17 @@ exports.sync = function(srcPattern, destPattern, options) {
     var stat = fs.statSync(src);
     var type = stat.isDirectory() ? 'dir' : 'file';
 
-    try {
-      // try unlink first
-      fs.unlinkSync(dest);
-    } catch (err) {
-      // most likely link didn't exist, which is o.k.
-    } finally {
+    if (!options.force) {
+      try {
+        // try unlink first
+        fs.unlinkSync(dest);
+      } catch (err) {
+        // most likely link didn't exist, which is o.k.
+      } finally {
+        fs.symlinkSync(src, dest, type);
+      }
+    } else {
+      rimraf.sync(dest);
       fs.symlinkSync(src, dest, type);
     }
 

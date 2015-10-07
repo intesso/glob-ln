@@ -72,6 +72,48 @@ test('do sync files', function(t) {
 
 });
 
+test('do sync files with force', function(t) {
+
+  cleanup();
+  fs.mkdirSync(__dirname + '/public');
+  fs.mkdirSync(__dirname + '/public/Irish-Pub');
+  fs.mkdirSync(__dirname + '/public/test_pub');
+
+  var src = __dirname + '/fixtures/:module/public/js/*.*';
+  var dest = __dirname + '/public/:module/js/*.*';
+  var options = {force:true};
+
+  ln.sync(src, dest, options);
+
+  t.ok(exists(__dirname + '/public/test_pub/js/bundle.js'));
+  t.ok(exists(__dirname + '/public/Irish-Pub/js/bundle.js'));
+
+  t.end();
+
+});
+
+
+test('do sync directory with force', function(t) {
+
+  cleanup();
+  fs.mkdirSync(__dirname + '/public');
+  fs.mkdirSync(__dirname + '/public/Irish-Pub');
+  fs.mkdirSync(__dirname + '/public/test_pub');
+
+  var src = __dirname + '/fixtures/:module/public';
+  var dest = __dirname + '/public/:module';
+  var options = {force:true};
+
+  ln.sync(src, dest, options);
+
+  t.ok(exists(__dirname + '/public/test_pub'));
+  t.ok(exists(__dirname + '/public/Irish-Pub'));
+
+  t.end();
+
+});
+
+
 
 function cleanup() {
   rm.sync(__dirname + '/public');

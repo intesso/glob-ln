@@ -1,1 +1,0 @@
-/Users/andineck/Development/github/glob-ln/test/fixtures/test_pub/public/js/bundle.js

@@ -16,6 +16,7 @@ var ln = require('glob-ln');
 // async
 var src = __dirname + '/fixtures/:module/public';
 var dest = __dirname + '/public/:module';
+var options = {force: true};
 ln(src, dest, function(err) {
     if (err) console.error(err);
 });
@@ -39,6 +40,18 @@ async glob ln version.
 ## ln.sync(srcPattern, destPattern [,options])
 sync glob ln version.
 
+
+# options
+
+```js
+// options with the following default values:
+var options = {
+
+  // remove destination before operation
+  force: false
+
+};
+```
 
 # test
 ```bash
